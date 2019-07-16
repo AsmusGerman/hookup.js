@@ -1,0 +1,22 @@
+{
+  "name": "hookup",
+  "version": "1.0.0",
+  "description": "basic postmessage communication library to handle messages between topmost window and its iframes",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6"
+  },
+  "scripts": {
+    "build:dev": "webpack --config webpack.config.js --mode development",
+    "build": "webpack --config webpack.config.js --mode production"
+  },
+  "keywords": [],
+  "author": "Asmus Germán",
+  "license": "MIT"
+}
