@@ -1,23 +1,37 @@
 import { Hookup } from "./hookup";
 import { HookupMessage } from "./hookup-message";
+import { IfStateReady } from "./if-state-ready.descriptor";
+import { HookupState } from "./hookup-state";
 
 export class ParentHookup extends Hookup {
-  constructor(reference: Window) {
-    if (reference !== window.top) {
+  constructor() {
+    if (window !== window.top) {
       throw new Error("Parent must be the top most window");
     }
-
-    super(reference);
+    super();
   }
+
   public postback(callback: (message: HookupMessage) => void): void {
-    this.reference.addEventListener("message", function(event) {
-      if (!!event.data.hookup) {
-        callback(event.data.hookup);
+    window.addEventListener("message", function(event) {
+      // only hookup messages after child state is ready
+      if (
+        !!event.data.hookup &&
+        !!event.data.state &&
+        event.data.state === HookupState.ready
+      ) {
+        callback(event.data);
       }
     });
   }
-  
-  public post(message: HookupMessage, child: string): void {
-    this.reference.frames[child].postMessage(message, "*");
+
+  @IfStateReady()
+  public post(message: any, child?: string): void {
+    debugger;
+    if (!!child) {
+      window.frames[child].postMessage(
+        new HookupMessage(message, this.state),
+        "*"
+      );
+    }
   }
 }
